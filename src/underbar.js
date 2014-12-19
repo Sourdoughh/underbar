@@ -217,18 +217,51 @@
       }
       return item === target;
     }, false);
+
+    //It appears that wasFound is the accumulator, the intial value set to false,
+    //and the item is each element/value in the collection. It'll iterate through
+    //each element/value and compare it vs target. If the return is true then the
+    //accumulator returns true and the statement exits?
   };
 
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+      return _.reduce(collection, function(accumulator, element){
+        if(!accumulator){ //if not true then return false
+          return false;
+        } 
+
+        if(iterator === undefined){
+          return _.identity(element) ? true : false;
+        } else {
+          return iterator(element) ? true : false;
+        }
+
+      }, true);//collection, func, acc to true
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+
+    if(iterator === undefined) {
+      iterator = _.identity;
+    }
+
+    return !_.every(collection, function(element){
+      return !iterator(element);
+    });
+
+    // var answer = false
+    // for(var i = 0; i = collection.length; i++){ //huh shouldn't this work?
+    //   if(iterator(collection[i])){
+    //     answer = true;
+    //   }
+    // }
+    // return answer;
   };
 
 
@@ -251,11 +284,24 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    _.each(arguments, function(value){
+      _.each(value, function(innerValue, key){
+        obj[key] = innerValue;
+      });
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    _.each(arguments, function(value){
+      _.each(value, function(innerValue, key){
+        if(!obj.hasOwnProperty(key))
+          obj[key] = innerValue
+      });
+    });
+    return obj;
   };
 
 
@@ -299,6 +345,14 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var memo = {}; //store function resuts here
+    return function(){
+      var argu = Array.prototype.slice.call(arguments); //for each argument in the function
+      if(!(argu in memo)){ //check if it doesn't exist
+        memo[argu] = func.apply(this, arguments); //if it's not saved then run the function
+      }
+      return memo[argu];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -307,7 +361,11 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {
+  _.delay = function(func, wait) {  
+    var argu = Array.prototype.slice.call(arguments, 2);
+    return setTimeout(function(){
+      func.apply(this, argu);
+    }, wait);
   };
 
 
@@ -322,6 +380,18 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var copiedArray = array.slice();
+    var newArr = [];
+    var n = copiedArray.length;
+    var randomInt;
+
+    while(n){
+      randomInt = Math.floor(Math.random()*n);
+      newArr.push(copiedArray.splice(randomInt, 1)[0]);
+      n--;
+    }
+
+    return newArr;
   };
 
 
