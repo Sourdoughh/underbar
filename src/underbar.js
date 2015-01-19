@@ -133,6 +133,12 @@
 
     return answer;
 
+    // for(var i = 0; i < collection.length; i++){
+    //   if(!test(collection[i])){
+    //     answer.push(colection[i]);
+    //   }
+    // }
+
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
   };
@@ -154,6 +160,7 @@
     // }
 
     return dupFreeArr;
+
   };
 
 
@@ -309,6 +316,22 @@
         }
 
       }, true);//collection, func, acc to true
+
+
+    // var answer = true;
+
+    // for(var i = 0; i < collection.length; i++){
+    //   if(iterator === undefined){
+    //     iterator = _.identity;
+    //   }
+
+    //   if(!iterator(collection[i])){
+    //     return false;
+    //   }
+    // }
+
+    // return answer;
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -451,9 +474,9 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
 
-  var times2 = function(n){
-    return n*2;
-  }
+  // var times2 = function(n){
+  //   return n*2;
+  // }
 
   // var times2Memo = _.memoize(times2);
   //                = var memo = {}; //you don't see this returned but it's contained in the closure scope
